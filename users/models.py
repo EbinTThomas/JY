@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from phonenumber_field.modelfields import PhoneNumberField
+import uuid
     
 class CustomAccountManager(BaseUserManager):
   def create_user(self, email, user_name, password, **other_fields):
@@ -28,12 +29,12 @@ class CustomAccountManager(BaseUserManager):
     return self.create_user(email, user_name, password, **other_fields)
 
 class User(AbstractBaseUser, PermissionsMixin):
+  id = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
   email = models.EmailField(_('email address'), unique=True)
   user_name = models.CharField(max_length=150, unique=True)
   first_name = models.CharField(max_length=150, blank=True, null=True)
   last_name = models.CharField(max_length=150, blank=True, null=True)
   phone = PhoneNumberField(null=False, blank=False, unique=True)
-  thumbnail = models.ImageField(upload_to='users/profile/', blank=True, null=True)
   start_date = models.DateTimeField(default=timezone.now)
   is_staff = models.BooleanField(default=False)
   is_active = models.BooleanField(default=True)
