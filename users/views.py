@@ -10,7 +10,7 @@ def signup(request):
     form.start_date = timezone.now()
     if form.is_valid():
       form.save()
-      return redirect('users:login')
+      return redirect('login')
     else:
       return render(request, 'registration/signup.html',{
         'form': form,
